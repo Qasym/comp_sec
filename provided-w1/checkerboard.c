@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define DEBUG 1
+
 int main(int argc, char *argv[]) {
   struct pixel palette[2]; // we have 2 pixels
   struct image *img = NULL; // initially no image
@@ -40,71 +42,118 @@ int main(int argc, char *argv[]) {
   }
   //* End of pretty straightforward lines
 
-  long height = strtol(height_arg, &end_ptr, 10); //? what is it trying to do?
+  long height = strtol(height_arg, &end_ptr, 10);
+  /** the line right above
+   * parsing the number from "height_arg"
+   * todo: have to learn the strtol function parameters
+   * ? what is it trying to do with &end_ptr
+   */
 
-  if (height <= 0 || height >= USHRT_MAX || *end_ptr) { //? what is the point of "*end_ptr"
+  if (height <= 0 || height >= USHRT_MAX || *end_ptr) { 
+    /** the if statement above
+     * checking the boundaries
+     * ? what is the point of "*end_ptr"
+    */
     goto error;
   }
 
   long width = strtol(width_arg, &end_ptr, 10);
+  /** the line right above
+   * parsing the number from "width_arg"
+   * ? what is it trying to do with &end_ptr
+   */
 
   if (width <= 0 || width >= USHRT_MAX || *end_ptr) {
+    /** the if statement above
+     * checking the boundaries
+     * ? what is the point of "*end_ptr"
+    */
     goto error;
   }
 
   unsigned long n_pixels = height * width; // calculating the number of pixels
 
   long color1 = strtol(hex_color_arg1, &end_ptr, 16);
+  /** the line right above
+   * parsing the number from "hex_color_arg1"
+   * ? what is it trying to do with &end_ptr
+   */
 
-  if (*end_ptr) {
+  if (*end_ptr) { 
+    /** the if statement above
+     * ! Potentially buggy place
+     * ? what is the point of "*end_ptr"
+     */
     goto error;
   }
 
   long color2 = strtol(hex_color_arg2, &end_ptr, 16);
+  /** the line right above
+   * parsing the number from "hex_color_arg2"
+   * ? what is it trying to do with &end_ptr
+   */
 
   if (*end_ptr) {
+    /** the if statement above
+     * ! Potentially buggy place
+     * ? what is the point of "*end_ptr"
+     */
     goto error;
   }
 
   /* Overflow checking */
-  if (width > LONG_MAX / height || width < LONG_MIN / height) {
+  if (width > LONG_MAX / height || width < LONG_MIN / height) { // ? I didn't get the formula for the overflow check
     goto error;
   }
 
   long square_width = strtol(square_width_arg, &end_ptr, 10);
+  /** the line right above
+   * parsing the number from "hex_color_arg2"
+   * ? what is it trying to do with &end_ptr
+   */
 
-  if (square_width <= 0 || *end_ptr) {
+  if (square_width <= 0 || *end_ptr) { //? what is the point of "*end_ptr"
     goto error;
   }
 
   /* We assign colors to the palette */
+  //* Not very straightforward lines
   palette[0].red = (color1 & 0xff0000) >> 16;
   palette[0].green = (color1 & 0x00ff00) >> 8;
   palette[0].blue = (color1 & 0x0000ff);
   palette[0].alpha = 0xff;
-
+  // Hopefully no bugs here
   palette[1].red = (color2 & 0xff0000) >> 16;
   palette[1].green = (color2 & 0x00ff00) >> 8;
   palette[1].blue = (color2 & 0x0000ff);
   palette[1].alpha = 0xff;
+  //* End of not very straightforward lines
 
   /* Memory allocation and error handling */
-  img = malloc(sizeof(struct image));
-  if (!img) {
-    goto error_mem;
+
+  if (DEBUG) printf("<1>\n");
+  img = malloc(sizeof(struct image)); // allocating memory
+  if (DEBUG) printf("<2>\n");
+
+  if (!img) { // if img is null
+    goto error_mem; // we raise memory error
   }
 
-  img->px = malloc(sizeof(struct pixel) * n_pixels);
-  if (!img->px) {
-    free(img);
-    goto error_img;
+  img->px = malloc(sizeof(struct pixel) * n_pixels); // allocating memory for pixels array
+  if (DEBUG) printf("<3>\n");
+
+  if (!img->px) { // if array is null
+    free(img); // free memory allocated for img
+    goto error_img; // and raise memory error
   }
 
-  img->size_x = width;
-  img->size_y = height;
+  if (DEBUG) printf("<4>\n");
 
-  {
-    struct pixel(*image_data)[width] = (struct pixel(*)[width])img->px;
+  img->size_x = width; // pretty straightforward
+  img->size_y = height; // pretty straightforward
+
+  { // approximately understood what is going on in here
+    struct pixel(*image_data)[width] = (struct pixel(*)[width])img->px; //? wat?
 
     /* We segment the image into squares and fill each square with its color */
     for (int i = 0; i < (height + square_width - 1) / square_width; i++) {
@@ -134,10 +183,16 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  if (DEBUG) printf("<5>\n");
+
   store_png(output_name, img, palette, 2);
+
+  if (DEBUG) printf("<6>\n");
 
   free(img->px);
   free(img);
+
+  if (DEBUG) printf("<7>\n");
 
   return 0;
 
@@ -155,3 +210,12 @@ error_mem:
   printf("Couldn't allocate memory\n");
   return 1;
 }
+
+
+/**
+ * @brief Some interesting test cases
+ * 1) 
+ * ./checkerboard png_1.png 99 100 10 ffffff aaaaaa -> causes an error
+ * ./checkerboard png_1.png 100 88 10 ffffff aaaaaa -> does not cause an error
+ * 
+ */
