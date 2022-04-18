@@ -45,14 +45,15 @@ int main(int argc, char *argv[]) {
   long height = strtol(height_arg, &end_ptr, 10);
   /** the line right above
    * parsing the number from "height_arg"
-   * todo: have to learn the strtol function parameters
-   * ? what is it trying to do with &end_ptr
+   * // todo: have to learn the strtol function parameters
    */
 
   if (height <= 0 || height >= USHRT_MAX || *end_ptr) { 
     /** the if statement above
      * checking the boundaries
      * ? what is the point of "*end_ptr"
+     * The point of dereferencing end_ptr is to check
+     * if we have parsed number successfully
     */
     goto error;
   }
@@ -60,7 +61,6 @@ int main(int argc, char *argv[]) {
   long width = strtol(width_arg, &end_ptr, 10);
   /** the line right above
    * parsing the number from "width_arg"
-   * ? what is it trying to do with &end_ptr
    */
 
   if (width <= 0 || width >= USHRT_MAX || *end_ptr) {
@@ -76,7 +76,6 @@ int main(int argc, char *argv[]) {
   long color1 = strtol(hex_color_arg1, &end_ptr, 16);
   /** the line right above
    * parsing the number from "hex_color_arg1"
-   * ? what is it trying to do with &end_ptr
    */
 
   if (*end_ptr) { 
@@ -90,7 +89,6 @@ int main(int argc, char *argv[]) {
   long color2 = strtol(hex_color_arg2, &end_ptr, 16);
   /** the line right above
    * parsing the number from "hex_color_arg2"
-   * ? what is it trying to do with &end_ptr
    */
 
   if (*end_ptr) {
@@ -109,7 +107,6 @@ int main(int argc, char *argv[]) {
   long square_width = strtol(square_width_arg, &end_ptr, 10);
   /** the line right above
    * parsing the number from "hex_color_arg2"
-   * ? what is it trying to do with &end_ptr
    */
 
   if (square_width <= 0 || *end_ptr) { //? what is the point of "*end_ptr"
@@ -217,5 +214,5 @@ error_mem:
  * 1) 
  * ./checkerboard png_1.png 99 100 10 ffffff aaaaaa -> causes an error
  * ./checkerboard png_1.png 100 88 10 ffffff aaaaaa -> does not cause an error
- * 
+ * @note There is something different in the way height and width are treated
  */

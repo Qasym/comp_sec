@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
 
   /* Assign names to arguments for better abstraction */
   char output_name[OUTPUT_NAME_SIZE];
-  strcpy(output_name, argv[1]);
+  strcpy(output_name, argv[1]); //? Why strcpy this? not just simply using pointer
+
   const char *height_arg = argv[2];
   const char *width_arg = argv[3];
   const char *hex_color_arg = argv[4];
@@ -45,16 +46,16 @@ int main(int argc, char *argv[]) {
   /* If the user provides negative height or the height is 0 and the end_ptr
    * hasn't moved we issue an error and free palette
    */
-  if (height >= USHRT_MAX || *end_ptr)
-    goto error;
+  if (height >= USHRT_MAX || *end_ptr) //! does not check for negative values
+    goto error; // wat, where are braces??
 
   unsigned long width = strtol(width_arg, &end_ptr, 10);
 
-  if (width >= USHRT_MAX || *end_ptr) {
+  if (width >= USHRT_MAX || *end_ptr) { //! does not check for negative values
     goto error;
   }
 
-  unsigned n_pixels = height * width;
+  unsigned n_pixels = height * width; //! unsigned int, overflow check does not exist
 
   long color = strtol(hex_color_arg, &end_ptr, 16);
 
