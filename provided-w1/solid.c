@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
   char output_name[OUTPUT_NAME_SIZE];
   strcpy(output_name, argv[1]); //? Why strcpy this? not just simply using pointer
 
-  const char *height_arg = argv[2];
+  const char *height_arg = argv[2]; //? what if -9223372036854775807
   const char *width_arg = argv[3];
   const char *hex_color_arg = argv[4];
   char *end_ptr;
@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
   }
 
   unsigned long height = strtol(height_arg, &end_ptr, 10);
+  printf("height is: %lu\n", height);
 
   /* If the user provides negative height or the height is 0 and the end_ptr
    * hasn't moved we issue an error and free palette
@@ -50,6 +51,7 @@ int main(int argc, char *argv[]) {
     goto error; // wat, where are braces??
 
   unsigned long width = strtol(width_arg, &end_ptr, 10);
+  printf("width is : %lu\n", width);
 
   if (width == 0 || width >= USHRT_MAX || *end_ptr) { //! does not check for negative values and zero
     goto error;

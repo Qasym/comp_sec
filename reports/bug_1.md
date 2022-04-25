@@ -8,8 +8,8 @@
 such arguments will result in a cursed *png* file
 
 ## Affected Lines in the original program
-- solid.c:48
-- solid.c:53
+- **solid.c**:48
+- **solid.c**:53
 
 ## Expected vs Observed
 - Expected behavior: We expect our program to create a filled rectangle of provided size.
