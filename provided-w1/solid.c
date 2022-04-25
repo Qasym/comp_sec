@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
    * By calling fflush we force the program to output "Size " right away
    */
   fflush(stdout);
-  strcat(command, "stat -c %s ");
+  strcat(command, "stat -c %s "); //?! what if the output_name is the name of a file that already exists?
   strncat(command, output_name, OUTPUT_NAME_SIZE);
   system(command);
 
