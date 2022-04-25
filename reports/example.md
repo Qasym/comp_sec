@@ -6,7 +6,7 @@
 
 ## Affected Lines in the original program
 
-## Expected vs Observer
+## Expected vs Observed
 
 ## Steps to reproduce 
 
@@ -14,7 +14,6 @@
     ```bash
     sudo apt install kek
     ```
-2. 
 
 ## Proof of concept
 - If necessary
