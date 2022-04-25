@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]) {
   struct image *img;
-
+  printf("<1>\n");
   /* There isn't any complex error handling in this function, so we use a simple
    * if */
   if (argc != 8) {
@@ -12,6 +12,8 @@ int main(int argc, char *argv[]) {
            argv[0]);
     return 1;
   }
+
+  printf("<2>\n");
 
   /* Parse the points. Invalid input will just set the coordinate to 0.
    * The program will still work.
@@ -26,24 +28,32 @@ int main(int argc, char *argv[]) {
   unsigned bottom_right_x = atoi(argv[5]);
   unsigned bottom_right_y = atoi(argv[6]);
 
+  printf("<3>\n");
+
   /* Invalid color code will set the color to black.
    * If it worked for Henry Ford, it will work for us.
    */
 
   char *end_ptr;
-  long hex_color = strtol(argv[7], end_ptr, 16);
+  long hex_color = strtol(argv[7], &end_ptr, 16); //! type error detected
   if (*end_ptr || strlen(argv[7]) != 6 || hex_color < 0) {
     hex_color = 0;
   }
+
+  printf("<4>\n");
 
   if (load_png(input, &img)) {
     return 1;
   }
 
+  printf("<5>\n");
+
   unsigned height = img->size_y;
   unsigned width = img->size_x;
 
   struct pixel(*image_data)[width] = (struct pixel(*)[width])img->px;
+
+  printf("<6>\n");
 
   /* We iterate over all pixel in the image and check whether they are in the
    * rectangle
@@ -81,6 +91,8 @@ int main(int argc, char *argv[]) {
       j++;
     }
   }
+
+  printf("<7>\n");
 
   store_png(output, img, NULL, 0);
   free(img->px);
