@@ -46,12 +46,12 @@ int main(int argc, char *argv[]) {
   /* If the user provides negative height or the height is 0 and the end_ptr
    * hasn't moved we issue an error and free palette
    */
-  if (height >= USHRT_MAX || *end_ptr) //! does not check for negative values and zero
+  if (height == 0 || height >= USHRT_MAX || *end_ptr) //! does not check for negative values and zero
     goto error; // wat, where are braces??
 
   unsigned long width = strtol(width_arg, &end_ptr, 10);
 
-  if (width >= USHRT_MAX || *end_ptr) { //! does not check for negative values and zero
+  if (width == 0 || width >= USHRT_MAX || *end_ptr) { //! does not check for negative values and zero
     goto error;
   }
 

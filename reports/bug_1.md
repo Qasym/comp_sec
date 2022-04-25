@@ -12,8 +12,8 @@ such arguments will result in a cursed *png* file
 - solid.c:53
 
 ## Expected vs Observed
-- Expected behavior: We expect our program to create a filled rectangle of provided size,<br>
-however with 0 width or 0 height, we can't have a rectangle, and those arguments result<br>
+- Expected behavior: We expect our program to create a filled rectangle of provided size.
+- Observerd behavior: With 0 width or 0 height, we can't have a rectangle, and those arguments result<br>
 in a broken *png* file
 
 ## Steps to reproduce 
