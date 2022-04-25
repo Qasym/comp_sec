@@ -13,6 +13,8 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  printf("<1>\n");
+
   /* Rename arguments for easier reference */
   char *input = argv[1];
   char *output = argv[2];
@@ -24,16 +26,21 @@ int main(int argc, char *argv[]) {
   /* Invalid radius will just be interpretted as 0 */
   int radius = atoi(argv[5]);
 
+  printf("<2>\n");
+
   /* Invalid color will be interpretted as black */
   char *end_ptr;
-  long hex_color = strtol(argv[7], &end_ptr, 16);
-  if (*end_ptr || strlen(argv[7]) != 6 || hex_color < 0) {
+  printf("<3>\n");
+  long hex_color = strtol(argv[6], &end_ptr, 16); //! argv[7] is a bug
+  if (*end_ptr || strlen(argv[6]) != 6 || hex_color < 0) { //! argv[7] is a bug
     hex_color = 0;
   }
 
   if (load_png(input, &img)) {
     return 1;
   }
+
+  printf("<4>\n");
 
   unsigned height = img->size_y;
   unsigned width = img->size_x;
@@ -67,6 +74,7 @@ int main(int argc, char *argv[]) {
     image_data[y][x].alpha = 0xff;
   }
 
+
   /* There are going to be some ugly gaps in the image, so we will repeat the
    * procedure for the y axis.
    *
@@ -89,6 +97,7 @@ int main(int argc, char *argv[]) {
     image_data[y][x].blue = (hex_color & 0x0000ff);
     image_data[y][x].alpha = 0xff;
   }
+
 
   store_png(output, img, NULL, 0);
   free(img->px);
