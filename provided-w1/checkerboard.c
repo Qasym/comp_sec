@@ -6,10 +6,10 @@
 #define DEBUG 1
 
 int main(int argc, char *argv[]) {
-  struct pixel palette[2]; // we have 2 pixels
+  struct pixel palette[2];  // we have 2 pixels
   struct image *img = NULL; // initially no image
 
-  if (argc != 7) { // we have to receive exactly 7 arguments 
+  if (argc != 7) { // we have to receive exactly 7 arguments
     /*
     ./program 1 2 3 4 5 6 7
     Here, "./program" is the argument at index 0
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 
   long height = strtol(height_arg, &end_ptr, 10);
 
-  if (height <= 0 || height >= USHRT_MAX || *end_ptr) { 
+  if (height <= 0 || height >= USHRT_MAX || *end_ptr) {
     goto error;
   }
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
    * parsing the number from "hex_color_arg1"
    */
 
-  if (*end_ptr) { 
+  if (*end_ptr) {
     goto error;
   }
 
@@ -78,7 +78,9 @@ int main(int argc, char *argv[]) {
   }
 
   /* Overflow checking */
-  if (width > LONG_MAX / height || width < LONG_MIN / height) { // ? I didn't get the formula for the overflow check
+  if (width > LONG_MAX / height ||
+      width < LONG_MIN /
+                  height) { // ? I didn't get the formula for the overflow check
     goto error;
   }
 
@@ -87,7 +89,8 @@ int main(int argc, char *argv[]) {
    * parsing the number from "hex_color_arg2"
    */
 
-  if (square_width <= 0 || *end_ptr || square_width > height || height % square_width != 0) {
+  if (square_width <= 0 || *end_ptr || square_width > height ||
+      height % square_width != 0) {
     goto error;
   }
 
@@ -106,25 +109,30 @@ int main(int argc, char *argv[]) {
 
   /* Memory allocation and error handling */
 
-  if (DEBUG) printf("<1>\n");
+  if (DEBUG)
+    printf("<1>\n");
   img = malloc(sizeof(struct image)); // allocating memory
-  if (DEBUG) printf("<2>\n");
+  if (DEBUG)
+    printf("<2>\n");
 
-  if (!img) { // if img is null
+  if (!img) {       // if img is null
     goto error_mem; // we raise memory error
   }
 
-  img->px = malloc(sizeof(struct pixel) * n_pixels); // allocating memory for pixels array
-  if (DEBUG) printf("<3>\n");
+  img->px = malloc(sizeof(struct pixel) *
+                   n_pixels); // allocating memory for pixels array
+  if (DEBUG)
+    printf("<3>\n");
 
-  if (!img->px) { // if array is null
-    free(img); // free memory allocated for img
+  if (!img->px) {   // if array is null
+    free(img);      // free memory allocated for img
     goto error_img; // and raise memory error
   }
 
-  if (DEBUG) printf("<4>\n");
+  if (DEBUG)
+    printf("<4>\n");
 
-  img->size_x = width; // pretty straightforward
+  img->size_x = width;  // pretty straightforward
   img->size_y = height; // pretty straightforward
 
   { // approximately understood what is going on in here
@@ -158,16 +166,19 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  if (DEBUG) printf("<5>\n");
+  if (DEBUG)
+    printf("<5>\n");
 
   store_png(output_name, img, palette, 2);
 
-  if (DEBUG) printf("<6>\n");
+  if (DEBUG)
+    printf("<6>\n");
 
   free(img->px);
   free(img);
 
-  if (DEBUG) printf("<7>\n");
+  if (DEBUG)
+    printf("<7>\n");
 
   return 0;
 
@@ -186,10 +197,9 @@ error_mem:
   return 1;
 }
 
-
 /**
  * @brief Some interesting test cases
- * 1) 
+ * 1)
  * ./checkerboard png_1.png 99 100 10 ffffff aaaaaa -> causes an error
  * ./checkerboard png_1.png 100 88 10 ffffff aaaaaa -> does not cause an error
  * @note There is something different in the way height and width are treated
