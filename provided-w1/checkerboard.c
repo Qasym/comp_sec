@@ -10,6 +10,7 @@ int main(int argc, char *argv[]) {
   struct image *img = NULL; // initially no image
 
   if (argc != 7) { // we have to receive exactly 7 arguments
+    printf("Not enough arguments, must be 7!\n");
     goto error; // otherwise we raise error
   }
 
@@ -30,10 +31,12 @@ int main(int argc, char *argv[]) {
 
   //* Pretty straightforward lines
   if (strlen(hex_color_arg1) != 6) { // if hex size doesn't match
+    printf("Invalid hex color!\n");
     goto error;
   }
 
   if (strlen(hex_color_arg2) != 6) { // if hex size doesn't match
+    printf("Invalid hex color!\n");
     goto error;
   }
   //* End of pretty straightforward lines
@@ -41,6 +44,7 @@ int main(int argc, char *argv[]) {
   long height = strtol(height_arg, &end_ptr, 10);
 
   if (height <= 0 || height >= USHRT_MAX || *end_ptr) {
+    printf("Something is wrong with height!\n");
     goto error;
   }
 
@@ -50,6 +54,7 @@ int main(int argc, char *argv[]) {
    */
 
   if (width <= 0 || width >= USHRT_MAX || *end_ptr) {
+    printf("Something is wrong with width!\n");
     goto error;
   }
 
@@ -61,6 +66,7 @@ int main(int argc, char *argv[]) {
    */
 
   if (*end_ptr) {
+    printf("end_ptr: %s", end_ptr);
     goto error;
   }
 
@@ -70,6 +76,7 @@ int main(int argc, char *argv[]) {
    */
 
   if (*end_ptr) {
+    printf("end_ptr: %s", end_ptr);
     goto error;
   }
 
@@ -77,6 +84,7 @@ int main(int argc, char *argv[]) {
   if (width > LONG_MAX / height ||
       width < LONG_MIN /
                   height) { // ? I didn't get the formula for the overflow check
+    printf("Overflow caught!\n");
     goto error;
   }
 
@@ -121,7 +129,6 @@ int main(int argc, char *argv[]) {
     printf("<3>\n");
 
   if (!img->px) {   // if array is null
-    free(img);      //!! temporal memory safety violation bug
     goto error_img; // and raise memory error
   }
 
