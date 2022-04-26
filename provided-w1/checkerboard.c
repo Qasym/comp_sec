@@ -10,10 +10,6 @@ int main(int argc, char *argv[]) {
   struct image *img = NULL; // initially no image
 
   if (argc != 7) { // we have to receive exactly 7 arguments
-    /*
-    ./program 1 2 3 4 5 6 7
-    Here, "./program" is the argument at index 0
-    */
     goto error; // otherwise we raise error
   }
 
@@ -28,7 +24,7 @@ int main(int argc, char *argv[]) {
   const char *hex_color_arg2 = argv[6];
   //* End of pretty straightforward lines
 
-  char *end_ptr; //? what is the purpose of this guy?
+  char *end_ptr;
 
   /* Parse the arguments */
 
@@ -125,7 +121,7 @@ int main(int argc, char *argv[]) {
     printf("<3>\n");
 
   if (!img->px) {   // if array is null
-    free(img);      // free memory allocated for img
+    free(img);      //!! temporal memory safety violation bug
     goto error_img; // and raise memory error
   }
 
