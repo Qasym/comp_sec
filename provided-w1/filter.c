@@ -14,11 +14,6 @@ void filter_grayscale(struct image *img, void *weight_arr) {
       (struct pixel(*)[img->size_x])img->px;
   double *weights = (double *)weight_arr;
 
-  /* BUG!
-   * This bug isn't graded.
-   *
-   * FIX: Initialize both variables to 0.
-   */
   for (unsigned short i = 0; i < img->size_y; i++) {
     for (unsigned short j = 0; j < img->size_x; j++) {
       double luminosity = 0;
@@ -98,7 +93,7 @@ void filter_blur(struct image *img, void *r) {
     }
   }
 
-  free(img->px);
+  free(img->px); //! possible bug location
   img->px = (struct pixel *)new_data;
   return;
 }
