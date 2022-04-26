@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
    * parsing the number from "hex_color_arg2"
    */
 
-  if (square_width <= 0 || *end_ptr || square_width > height) {
+  if (square_width <= 0 || *end_ptr || square_width > height || height % square_width != 0) {
     goto error;
   }
 
