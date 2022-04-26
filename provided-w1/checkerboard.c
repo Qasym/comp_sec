@@ -43,18 +43,8 @@ int main(int argc, char *argv[]) {
   //* End of pretty straightforward lines
 
   long height = strtol(height_arg, &end_ptr, 10);
-  /** the line right above
-   * parsing the number from "height_arg"
-   * // todo: have to learn the strtol function parameters
-   */
 
   if (height <= 0 || height >= USHRT_MAX || *end_ptr) { 
-    /** the if statement above
-     * checking the boundaries
-     * ? what is the point of "*end_ptr"
-     * The point of dereferencing end_ptr is to check
-     * if we have parsed number successfully
-    */
     goto error;
   }
 
@@ -64,10 +54,6 @@ int main(int argc, char *argv[]) {
    */
 
   if (width <= 0 || width >= USHRT_MAX || *end_ptr) {
-    /** the if statement above
-     * checking the boundaries
-     * ? what is the point of "*end_ptr"
-    */
     goto error;
   }
 
@@ -79,10 +65,6 @@ int main(int argc, char *argv[]) {
    */
 
   if (*end_ptr) { 
-    /** the if statement above
-     * ! Potentially buggy place
-     * ? what is the point of "*end_ptr"
-     */
     goto error;
   }
 
@@ -92,10 +74,6 @@ int main(int argc, char *argv[]) {
    */
 
   if (*end_ptr) {
-    /** the if statement above
-     * ! Potentially buggy place
-     * ? what is the point of "*end_ptr"
-     */
     goto error;
   }
 
@@ -109,7 +87,7 @@ int main(int argc, char *argv[]) {
    * parsing the number from "hex_color_arg2"
    */
 
-  if (square_width <= 0 || *end_ptr) { //? what is the point of "*end_ptr"
+  if (square_width <= 0 || *end_ptr || square_width > height) {
     goto error;
   }
 
