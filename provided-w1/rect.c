@@ -68,29 +68,39 @@ int main(int argc, char *argv[]) {
    * - below TL
    * - above BR
    */
-  unsigned i = 0;
-  unsigned j = 0;
-  while (i < height) {
-    while (j < width) {
-      // Check if the pixel is in the rectangle
+  // unsigned i = 0;
+  // unsigned j = 0;
+  // while (i < height) {
+  //   while (j < width) {
+  //     // Check if the pixel is in the rectangle
 
-      if (i >= top_left_y && i <= bottom_right_y && j >= top_left_x &&
-          j <= bottom_right_x) {
+  //     if (i >= top_left_y && i <= bottom_right_y && j >= top_left_x &&
+  //         j <= bottom_right_x) {
 
-        /* The fancy syntax here is just masking the corresponding bits
-         * If the color is RRGGBB, performing AND with 0xff0000 will isolate
-         * the bytes representing red. We then shift them to the right to bring
-         * them into the correct range
-         */
-        image_data[i][j].red = (hex_color & 0xff0000) >> 16;
-        image_data[i][j].green = (hex_color & 0x00ff00) >> 8;
-        image_data[i][j].blue = (hex_color & 0x0000ff);
-        image_data[i][j].alpha = 0xff;
-      }
-      i++;
-      j++;
+  //       /* The fancy syntax here is just masking the corresponding bits
+  //        * If the color is RRGGBB, performing AND with 0xff0000 will isolate
+  //        * the bytes representing red. We then shift them to the right to bring
+  //        * them into the correct range
+  //        */
+  //       image_data[i][j].red = (hex_color & 0xff0000) >> 16;
+  //       image_data[i][j].green = (hex_color & 0x00ff00) >> 8;
+  //       image_data[i][j].blue = (hex_color & 0x0000ff);
+  //       image_data[i][j].alpha = 0xff;
+  //     }
+  //     i++;
+  //     j++;
+  //   }
+  // }
+
+  for (unsigned i = top_left_y; i <= bottom_right_y; i++) {
+    for (unsigned j = top_left_x; j <= bottom_right_x; j++) {
+      image_data[i][j].red = (hex_color & 0xff0000) >> 16;
+      image_data[i][j].green = (hex_color & 0x00ff00) >> 8;
+      image_data[i][j].blue = (hex_color & 0x0000ff);
+      image_data[i][j].alpha = 0xff;
     }
   }
+  
 
   printf("<7>\n");
 
