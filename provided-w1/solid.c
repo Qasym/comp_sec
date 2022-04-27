@@ -110,23 +110,6 @@ int main(int argc, char *argv[]) {
   free(img->px);
   free(img);
 
-  /* We want to inform user how big the new image is.
-   * "stat -c %s filename" prints the size of the file
-   *
-   * To prevent buffer overflows we use strncat.
-   */
-  char command[512] = {0};
-
-  printf("Size: ");
-
-  /* printf will write to the screen when it encounters a new line
-   * By calling fflush we force the program to output "Size " right away
-   */
-  fflush(stdout);
-  strcat(command, "stat -c %s "); //?! what if the output_name is the name of a file that already exists?
-  strncat(command, output_name, OUTPUT_NAME_SIZE);
-  system(command);
-
   return 0;
 
   /* We use goto to jump to the corresponding error handling code.

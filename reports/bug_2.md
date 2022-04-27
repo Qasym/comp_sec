@@ -22,4 +22,4 @@ That will result in a command injection (for example we can get a filesystem inf
     ```
 
 ## Suggested fix
-- Use `stat()` function instead of executing the `stat -c %s` command
+- Do not call for a `system` function, remove everything associated with it
