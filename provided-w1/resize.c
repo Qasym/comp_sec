@@ -7,7 +7,11 @@ int main(int argc, char *argv[]) {
   struct image *new_img = NULL;
 
   /* Check if the argument count is correct */
-  printf("%i\n", argc);
+  if (argc == 1) {
+    printf("You have %i argument.\nNeed 4!\n", argc);
+  } else {
+    printf("You have %i arguments.\nNeed 4!\n", argc);
+  }
   if (argc != 4) {
     goto error_usage;
   }
@@ -20,18 +24,26 @@ int main(int argc, char *argv[]) {
 
   /* Resizing and image to 0 isn't allowed */
   if (factor <= 0) {
+    printf("Resize factor less than 0\n");
     goto error_usage;
   }
 
   if (load_png(input, &img)) {
+    printf("Error while loading image\n");
     return 1;
   }
 
   unsigned short height = img->size_y;
   unsigned short width = img->size_x;
 
-  unsigned short new_height = (unsigned)(height * factor);
-  unsigned short new_width = (unsigned)(width * factor);
+  if (USHRT_MAX < (unsigned)(height * factor) ||
+      USHRT_MAX < (unsigned)(width * factor)) {
+    printf("Overflow detected!\n");
+    goto error;
+  }
+
+  unsigned short new_height = (unsigned)(height * factor); //! Doesn't check for the overflow
+  unsigned short new_width = (unsigned)(width * factor);   //! Doesn't check for the overflow
 
   size_t n_pixels = new_height * new_width;
 
