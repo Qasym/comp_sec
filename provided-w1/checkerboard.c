@@ -42,7 +42,6 @@ int main(int argc, char *argv[]) {
   //* End of pretty straightforward lines
 
   long height = strtol(height_arg, &end_ptr, 10);
-
   if (height <= 0 || height >= USHRT_MAX || *end_ptr) {
     printf("Something is wrong with height!\n");
     goto error;
