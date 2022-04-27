@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 
   /* Assign names to arguments for better abstraction */
   char output_name[OUTPUT_NAME_SIZE];
-  strcpy(output_name, argv[1]); //? Why strcpy this? not just simply using pointer
+  strncpy(output_name, argv[1], OUTPUT_NAME_SIZE); //? Why strcpy this? not just simply using pointer
 
   const char *height_arg = argv[2]; //? what if -9223372036854775807
   const char *width_arg = argv[3];

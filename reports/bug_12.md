@@ -23,4 +23,7 @@ will result in a stack overflow
     ```
 
 ## Suggested fix
-- 
+- Substitute the affected `strcpy` with `strncpy`
+    ```c++
+    strncpy(output_name, argv[1], OUTPUT_NAME_SIZE);
+    ```

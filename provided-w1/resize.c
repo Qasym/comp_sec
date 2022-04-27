@@ -42,8 +42,8 @@ int main(int argc, char *argv[]) {
     goto error;
   }
 
-  unsigned short new_height = (unsigned)(height * factor); //! Doesn't check for the overflow
-  unsigned short new_width = (unsigned)(width * factor);   //! Doesn't check for the overflow
+  unsigned short new_height = (unsigned)(height * factor); 
+  unsigned short new_width = (unsigned)(width * factor);   
 
   size_t n_pixels = new_height * new_width;
 
@@ -51,6 +51,7 @@ int main(int argc, char *argv[]) {
   new_img = malloc(sizeof(struct image));
 
   if (!new_img) {
+    printf("Can not allocate memory for a new image\n");
     goto error_memory;
   }
 
@@ -60,6 +61,7 @@ int main(int argc, char *argv[]) {
   new_img->px = malloc(n_pixels + sizeof(struct pixel));
 
   if (!new_img->px) {
+    printf("Can not allocate memory for pixels\n");
     goto error_memory_img;
   }
 
