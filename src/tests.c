@@ -185,7 +185,7 @@ START_TEST(grayscale_examples) {
   struct image *img, *out;
   // load images
   ck_assert_int_eq(load_png(grayscale_sources[_i], &img), 0);
-  
+
   // apply grayscale filter
   filter_grayscale(img, weights);
 
@@ -228,7 +228,7 @@ START_TEST(negative_functionality) {
     assert(0 && "Rerun test, malloc failed");
 
   // setting colors
-  for (int i = 0; i < limit; i++) { 
+  for (int i = 0; i < limit; i++) {
     img.px[i].red = 0;
     img.px[i].green = 0;
     img.px[i].blue = 0;
@@ -284,7 +284,6 @@ START_TEST(blur_functionality) {
 
   struct image copy;
   int radius;
-  
 
   // check for radius = 0
   copy = duplicate_img(img);
@@ -309,8 +308,7 @@ START_TEST(blur_functionality) {
   struct pixel dark1 = {42, 42, 42, 255};
   struct pixel dark2 = {63, 63, 63, 255};
   struct pixel px_r1[3][3] = {
-    {dark2, dark1, dark2}, {dark1, dark0, dark1}, {dark2, dark1, dark2}
-  };
+      {dark2, dark1, dark2}, {dark1, dark0, dark1}, {dark2, dark1, dark2}};
   struct image img_r1 = {3, 3, &px_r1};
 
   for (int i = 0; i < 9; i++) {
@@ -325,11 +323,10 @@ START_TEST(blur_functionality) {
   copy = duplicate_img(img);
   radius = 2;
   filter_blur(&copy, &radius);
-  
-  // generate correct output 
+
+  // generate correct output
   struct pixel px_r2[3][3] = {
-    {dark0, dark0, dark0}, {dark0, dark0, dark0}, {dark0, dark0, dark0}
-  };
+      {dark0, dark0, dark0}, {dark0, dark0, dark0}, {dark0, dark0, dark0}};
   struct image img_r2 = {3, 3, &px_r2};
 
   for (int i = 0; i < 9; i++) {
@@ -352,7 +349,6 @@ START_TEST(blur_functionality) {
     ck_assert_uint_eq(copy.px[i].alpha, img_r2.px[i].alpha);
     ck_assert_uint_eq(copy.px[i].alpha, 255);
   }
-
 }
 END_TEST
 
@@ -406,12 +402,26 @@ int main() {
 
   srand(time(NULL) ^ getpid());
   blur_radius_img = generate_rand_img();
-  int tmp[20] = {
-    INT_MIN, INT_MAX, 0, blur_radius_img.size_x, blur_radius_img.size_y,
-    INT_MIN / 2, INT_MAX / 2, 0 / 2, blur_radius_img.size_x / 2, blur_radius_img.size_y / 2,
-    INT_MIN + 1, INT_MAX + 1, 1, blur_radius_img.size_x + 1, blur_radius_img.size_y + 1,
-    INT_MIN - 1, INT_MAX - 1, -1, blur_radius_img.size_x - 1, blur_radius_img.size_y - 1
-  };
+  int tmp[20] = {INT_MIN,
+                 INT_MAX,
+                 0,
+                 blur_radius_img.size_x,
+                 blur_radius_img.size_y,
+                 INT_MIN / 2,
+                 INT_MAX / 2,
+                 0 / 2,
+                 blur_radius_img.size_x / 2,
+                 blur_radius_img.size_y / 2,
+                 INT_MIN + 1,
+                 INT_MAX + 1,
+                 1,
+                 blur_radius_img.size_x + 1,
+                 blur_radius_img.size_y + 1,
+                 INT_MIN - 1,
+                 INT_MAX - 1,
+                 -1,
+                 blur_radius_img.size_x - 1,
+                 blur_radius_img.size_y - 1};
   memcpy(blur_radii, tmp, sizeof(blur_radii));
   tcase_add_loop_test(tc1, blur_radius_edge_cases, 0,
                       sizeof(blur_radii) / sizeof(blur_radii[0]));
@@ -422,9 +432,10 @@ int main() {
 
   /* Tests for functionality */
   tcase_add_test(tc2, grayscale_functionality);
-  
-  tcase_add_loop_test(tc2, grayscale_examples, 0, 
-                      sizeof(grayscale_sources) / sizeof(grayscale_sources[0])); //? will it result in 2
+
+  tcase_add_loop_test(tc2, grayscale_examples, 0,
+                      sizeof(grayscale_sources) /
+                          sizeof(grayscale_sources[0])); //? will it result in 2
 
   tcase_add_test(tc2, negative_functionality);
   tcase_add_test(tc2, blur_functionality);

@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   /* Invalid color will be interpretted as black */
   char *end_ptr;
   printf("<3>\n");
-  long hex_color = strtol(argv[6], &end_ptr, 16); //! argv[7] is a bug
+  long hex_color = strtol(argv[6], &end_ptr, 16);          //! argv[7] is a bug
   if (*end_ptr || strlen(argv[6]) != 6 || hex_color < 0) { //! argv[7] is a bug
     hex_color = 0;
   }
@@ -66,14 +66,13 @@ int main(int argc, char *argv[]) {
     image_data[y][x].alpha = 0xff;
 
     y = round(center_y - //! Wrong operator
-               sqrt(radius * radius - (x - center_x) * (x - center_x)));
+              sqrt(radius * radius - (x - center_x) * (x - center_x)));
 
     image_data[y][x].red = (hex_color & 0xff0000) >> 16;
     image_data[y][x].green = (hex_color & 0x00ff00) >> 8;
     image_data[y][x].blue = (hex_color & 0x0000ff);
     image_data[y][x].alpha = 0xff;
   }
-
 
   /* There are going to be some ugly gaps in the image, so we will repeat the
    * procedure for the y axis.
@@ -90,14 +89,13 @@ int main(int argc, char *argv[]) {
     image_data[y][x].alpha = 0xff;
 
     x = round(center_x - //! Wrong operator
-               sqrt(radius * radius - (y - center_y) * (y - center_y)));
+              sqrt(radius * radius - (y - center_y) * (y - center_y)));
 
     image_data[y][x].red = (hex_color & 0xff0000) >> 16;
     image_data[y][x].green = (hex_color & 0x00ff00) >> 8;
     image_data[y][x].blue = (hex_color & 0x0000ff);
     image_data[y][x].alpha = 0xff;
   }
-
 
   store_png(output, img, NULL, 0);
   free(img->px);

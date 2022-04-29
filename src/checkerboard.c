@@ -178,9 +178,9 @@ int main(int argc, char *argv[]) {
 
 /* Error handling code */
 error:
-  printf(
-      "Usage: %s output_name height width square_width hex_color1 hex_color2\nsquare_width has to divide both height and width\n",
-      argv[0]);
+  printf("Usage: %s output_name height width square_width hex_color1 "
+         "hex_color2\nsquare_width has to divide both height and width\n",
+         argv[0]);
   return 1;
 error_px:
   free(img->px);

@@ -41,8 +41,8 @@ int main(int argc, char *argv[]) {
     goto error;
   }
 
-  unsigned short new_height = (unsigned)(height * factor); 
-  unsigned short new_width = (unsigned)(width * factor);   
+  unsigned short new_height = (unsigned)(height * factor);
+  unsigned short new_width = (unsigned)(width * factor);
 
   size_t n_pixels = new_height * new_width;
 

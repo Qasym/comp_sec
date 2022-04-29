@@ -79,7 +79,8 @@ int main(int argc, char *argv[]) {
 
   //       /* The fancy syntax here is just masking the corresponding bits
   //        * If the color is RRGGBB, performing AND with 0xff0000 will isolate
-  //        * the bytes representing red. We then shift them to the right to bring
+  //        * the bytes representing red. We then shift them to the right to
+  //        bring
   //        * them into the correct range
   //        */
   //       image_data[i][j].red = (hex_color & 0xff0000) >> 16;
@@ -100,7 +101,6 @@ int main(int argc, char *argv[]) {
       image_data[i][j].alpha = 0xff;
     }
   }
-  
 
   printf("<7>\n");
 
