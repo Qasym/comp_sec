@@ -10,6 +10,8 @@ it iterates up to the edge including the edge (`<=` not `<`)
 ## Affected Lines in the original program
 - **filter.c**:118
 - **filter.c**:119
+- **filter.c**:64
+- **filter.c**:65
 
 ## Expected vs Observed
 - Expected behavior: program iterates without any problems
