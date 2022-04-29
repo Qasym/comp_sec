@@ -94,14 +94,14 @@ void filter_blur(struct image *img, void *r) {
     }
   }
 
-  free(img->px); //! possible bug location
+  free(img->px);
   img->px = (struct pixel *)new_data;
   return;
 }
 
 /* We allocate and return a pixel */
 struct pixel *get_pixel() {
-  struct pixel *px; //! possible location of a bug
+  struct pixel *px;
   px = malloc(sizeof(struct pixel));
   return px;
 }
