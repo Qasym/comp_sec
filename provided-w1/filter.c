@@ -4,6 +4,7 @@
 #include <string.h>
 
 #define ARG_SIZE 255
+#define DEBUG 0
 
 /* This filter iterates over the image and calculates the average value of the
  * color channels for every pixel This value is then written to all the channels
@@ -145,11 +146,42 @@ void filter_transparency(struct image *img, void *transparency) {
   }
 }
 
-double detection_helper_mult(uint8_t* pixels, double** weights) {
-  double result = 0;
-  for (size_t i = 0; i < 9; i++) {
-    result += pixels[i] * weights[0][i];
+void printArr(long* arr) {
+  printf("<array_contents>\n");
+  for (int i = 0; i < 9; i++) {
+    printf("%d\n", arr[i]);
   }
+  printf("<array_contents>\n");
+}
+
+double detection_helper_mult(long* pixels, double* weights) {
+  if (DEBUG) printf("<start: detection_helper_mult>\n");
+
+  if (DEBUG) printArr(pixels);
+
+  double result = 0;
+  if (DEBUG) printf("<1>\n");
+  if (DEBUG) printf("pixels[0] = %d ;; weights[0][0] = %f\n", pixels[0], weights[0]);
+  result += pixels[0] * weights[0];
+  if (DEBUG) printf("<2>\n");
+  result += pixels[1] * weights[1];
+  if (DEBUG) printf("<3>\n");
+  result += pixels[2] * weights[2];
+  if (DEBUG) printf("<4>\n");
+  result += pixels[3] * weights[3];
+  if (DEBUG) printf("<5>\n");
+  result += pixels[4] * weights[4];
+  if (DEBUG) printf("<6>\n");
+  result += pixels[5] * weights[5];
+  if (DEBUG) printf("<7>\n");
+  result += pixels[6] * weights[6];
+  if (DEBUG) printf("<8>\n");
+  result += pixels[7] * weights[7];
+  if (DEBUG) printf("<9>\n");
+  result += pixels[8] * weights[8];
+  if (DEBUG) printf("<10>\n");
+
+  if (DEBUG) printf("<end: detection_helper_mult>\n");
   return result;
 }
 
@@ -174,17 +206,27 @@ double detection_helper_mult(uint8_t* pixels, double** weights) {
  * For the pixel, the net gradient = sqrt(g_red^2 + g_green^2 + g_blue_2)
  */
 void filter_edge_detect(struct image *img, void *threshold_arg) {
+  if (DEBUG) printf("<1>\n");
+
   struct pixel(*image_data)[img->size_x] =
       (struct pixel(*)[img->size_x])img->px;
   uint8_t threshold = *(uint8_t *)threshold_arg;
   double weights_x[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
   double weights_y[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
 
+  double weightsX[9] = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
+  double weightsY[9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
   double g_red_x, g_red_y, g_green_x, g_green_y, g_blue_x, g_blue_y;
   double g_red, g_green, g_blue, g_total;
-  uint8_t pixels[9];
+  long pixels[9];
+
+  if (DEBUG) printf("<2>\n");
+
+
   for (long i = 0; i < img->size_y; i++) {
     for (long j = 0; j < img->size_x; j++) {
+      if (DEBUG) printf("<3>\n");
+
       pixels[0] = image_data[(i - 1) < 0 ? 0 : i - 1][(j - 1) < 0 ? 0 : j - 1].red;
       pixels[1] = image_data[(i - 1) < 0 ? 0 : i - 1][j].red;
       pixels[2] = image_data[(i - 1) < 0 ? 0 : i - 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].red;
@@ -195,8 +237,14 @@ void filter_edge_detect(struct image *img, void *threshold_arg) {
       pixels[7] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][j].red;
       pixels[8] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].red;
 
-      g_red_x = detection_helper_mult(pixels, weights_x);
-      g_red_y = detection_helper_mult(pixels, weights_y);
+      if (DEBUG) printArr(pixels);
+
+      if (DEBUG) printf("<4>\n");
+
+      g_red_x = detection_helper_mult(pixels, weightsX);
+      g_red_y = detection_helper_mult(pixels, weightsY);
+
+      if (DEBUG) printf("<5>\n");
 
       pixels[0] = image_data[(i - 1) < 0 ? 0 : i - 1][(j - 1) < 0 ? 0 : j - 1].green;
       pixels[1] = image_data[(i - 1) < 0 ? 0 : i - 1][j].green;
@@ -208,8 +256,12 @@ void filter_edge_detect(struct image *img, void *threshold_arg) {
       pixels[7] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][j].green;
       pixels[8] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].green;
 
-      g_green_x = detection_helper_mult(pixels, weights_x);
-      g_green_y = detection_helper_mult(pixels, weights_y);
+      if (DEBUG) printf("<6>\n");
+
+      g_green_x = detection_helper_mult(pixels, weightsX);
+      g_green_y = detection_helper_mult(pixels, weightsY);
+
+      if (DEBUG) printf("<7>\n");
 
       pixels[0] = image_data[(i - 1) < 0 ? 0 : i - 1][(j - 1) < 0 ? 0 : j - 1].blue;
       pixels[1] = image_data[(i - 1) < 0 ? 0 : i - 1][j].blue;
@@ -221,20 +273,32 @@ void filter_edge_detect(struct image *img, void *threshold_arg) {
       pixels[7] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][j].blue;
       pixels[8] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].blue;
 
-      g_blue_x = detection_helper_mult(pixels, weights_x);
-      g_blue_y = detection_helper_mult(pixels, weights_y);    
+      if (DEBUG) printf("<8>\n");
+
+      g_blue_x = detection_helper_mult(pixels, weightsX);
+      g_blue_y = detection_helper_mult(pixels, weightsY); 
+
+      if (DEBUG) printf("<9>\n");   
 
       g_red = sqrt(g_red_x * g_red_x + g_red_y * g_red_y);
       g_green = sqrt(g_green_x * g_green_x + g_green_y * g_green_y);
       g_blue = sqrt(g_blue_x * g_blue_x + g_blue_y * g_blue_y);
 
+      if (DEBUG) printf("<10>\n");
+
       g_total = sqrt(g_red * g_red + g_green * g_green + g_blue * g_blue);
+
+      if (DEBUG) printf("<11>\n");
 
       image_data[i][j].red = (g_total > threshold) ? 0 : 255;
       image_data[i][j].green = (g_total > threshold) ? 0 : 255;
       image_data[i][j].blue = (g_total > threshold) ? 0 : 255;
+
+      if (DEBUG) printf("<12>\n");
     }
   }
+
+  if (DEBUG) printf("<return filter_edge_detect>\n");
 }
 
 /* The filter structure comprises the filter function, its arguments and the
