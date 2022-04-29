@@ -182,7 +182,7 @@ char *grayscale_output[] = {"test_imgs/desert_gray.png",
                             "test_imgs/summer_gray.png"};
 START_TEST(grayscale_examples) {
   double weights[] = {0.2125, 0.7154, 0.0721};
-  /* TODO: Implement */
+  // todo: Implement */
 }
 END_TEST
 
@@ -190,13 +190,13 @@ END_TEST
  * Then invert the result again and verify that you get a black image back
  * The alpha channel needs to be intact in both cases */
 START_TEST(negative_functionality) {
-  /* TODO: Implement */
+  // todo: Implement */
 }
 END_TEST
 
 /* Check if the filter doesn't crash when we pass a 0x0 image */
 START_TEST(negative_zero_size) {
-  /* TODO: Implement */
+  // todo: Implement */
 }
 END_TEST
 
@@ -209,7 +209,7 @@ START_TEST(blur_functionality) {
       {black, black, black}, {black, white, black}, {black, black, black}};
   struct image img = {3, 3, &px};
 
-  /* TODO: Implement */
+  // todo: Implement */
 }
 END_TEST
 
@@ -219,19 +219,19 @@ END_TEST
 struct image blur_radius_img;
 int blur_radii[20];
 START_TEST(blur_radius_edge_cases) {
-  /* TODO: Implement */
+  // todo: Implement */
 }
 END_TEST
 
 /* Verify for a random image that the transparency filter works properly */
 START_TEST(transparency_functionality) {
-  /* TODO: Implement */
+  // todo: Implement */
 }
 END_TEST
 
 /* Check if the function crashes when we pass nullptr as the argument */
 START_TEST(transparency_edge_case) {
-  /* TODO: Implement */
+  // todo: Implement */
 }
 END_TEST
 
@@ -242,7 +242,7 @@ int main() {
   TCase *tc2 = tcase_create("basic functionality tests");
   suite_add_tcase(s, tc2);
 
-  /* TODO: Add more tests here */
+  // todo: Add more tests here */
   /* Add tests for input limits, and general functionality tests */
 
   /* Tests for limits*/
@@ -252,7 +252,7 @@ int main() {
   srand(time(NULL) ^ getpid());
   blur_radius_img = generate_rand_img();
   int tmp[20] = {
-  /* TODO: Fill in required radii */
+  // todo: Fill in required radii */
   };
   memcpy(blur_radii, tmp, sizeof(blur_radii));
   tcase_add_loop_test(tc1, blur_radius_edge_cases, 0,
@@ -264,7 +264,7 @@ int main() {
 
   /* Tests for functionality */
   tcase_add_test(tc2, grayscale_functionality);
-  /* TODO: Add looped test case for grayscale_examples */
+  // todo: Add looped test case for grayscale_examples */
   tcase_add_test(tc2, negative_functionality);
   tcase_add_test(tc2, blur_functionality);
   tcase_add_test(tc2, transparency_functionality);

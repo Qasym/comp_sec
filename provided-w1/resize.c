@@ -9,10 +9,9 @@ int main(int argc, char *argv[]) {
   /* Check if the argument count is correct */
   if (argc == 1) {
     printf("You have %i argument.\nNeed 4!\n", argc);
-  } else {
+    goto error_usage;
+  } else if (argc != 4) {
     printf("You have %i arguments.\nNeed 4!\n", argc);
-  }
-  if (argc != 4) {
     goto error_usage;
   }
 

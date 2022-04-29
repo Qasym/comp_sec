@@ -42,15 +42,13 @@ int main(int argc, char *argv[]) {
   //* End of pretty straightforward lines
 
   long height = strtol(height_arg, &end_ptr, 10);
+
   if (height <= 0 || height >= USHRT_MAX || *end_ptr) {
     printf("Something is wrong with height!\n");
     goto error;
   }
 
   long width = strtol(width_arg, &end_ptr, 10);
-  /** the line right above
-   * parsing the number from "width_arg"
-   */
 
   if (width <= 0 || width >= USHRT_MAX || *end_ptr) {
     printf("Something is wrong with width!\n");
@@ -60,9 +58,6 @@ int main(int argc, char *argv[]) {
   unsigned long n_pixels = height * width; // calculating the number of pixels
 
   long color1 = strtol(hex_color_arg1, &end_ptr, 16);
-  /** the line right above
-   * parsing the number from "hex_color_arg1"
-   */
 
   if (*end_ptr) {
     printf("end_ptr: %s", end_ptr);
@@ -70,9 +65,6 @@ int main(int argc, char *argv[]) {
   }
 
   long color2 = strtol(hex_color_arg2, &end_ptr, 16);
-  /** the line right above
-   * parsing the number from "hex_color_arg2"
-   */
 
   if (*end_ptr) {
     printf("end_ptr: %s", end_ptr);
@@ -88,12 +80,10 @@ int main(int argc, char *argv[]) {
   }
 
   long square_width = strtol(square_width_arg, &end_ptr, 10);
-  /** the line right above
-   * parsing the number from "hex_color_arg2"
-   */
 
   if (square_width <= 0 || *end_ptr || square_width > height ||
       height % square_width != 0) {
+    printf("Something is wrong with square_width!\n");
     goto error;
   }
 
@@ -114,7 +104,9 @@ int main(int argc, char *argv[]) {
 
   if (DEBUG)
     printf("<1>\n");
+
   img = malloc(sizeof(struct image)); // allocating memory
+
   if (DEBUG)
     printf("<2>\n");
 
@@ -187,7 +179,7 @@ int main(int argc, char *argv[]) {
 /* Error handling code */
 error:
   printf(
-      "Usage: %s output_name height width square_width hex_color1 hex_color2\n",
+      "Usage: %s output_name height width square_width hex_color1 hex_color2\nsquare_width has to divide both height and width\n",
       argv[0]);
   return 1;
 error_px:
