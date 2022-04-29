@@ -181,7 +181,7 @@ void filter_edge_detect(struct image *img, void *threshold_arg) {
   double weights_y[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
 
   double g_red_x, g_red_y, g_green_x, g_green_y, g_blue_x, g_blue_y;
-  double g_red, g_green, g_blue;
+  double g_red, g_green, g_blue, g_total;
   uint8_t pixels[9];
   for (long i = 0; i < img->size_y; i++) {
     for (long j = 0; j < img->size_x; j++) {
@@ -222,7 +222,17 @@ void filter_edge_detect(struct image *img, void *threshold_arg) {
       pixels[8] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].blue;
 
       g_blue_x = detection_helper_mult(pixels, weights_x);
-      g_blue_y = detection_helper_mult(pixels, weights_y);      
+      g_blue_y = detection_helper_mult(pixels, weights_y);    
+
+      g_red = sqrt(g_red_x * g_red_x + g_red_y * g_red_y);
+      g_green = sqrt(g_green_x * g_green_x + g_green_y * g_green_y);
+      g_blue = sqrt(g_blue_x * g_blue_x + g_blue_y * g_blue_y);
+
+      g_total = sqrt(g_red * g_red + g_green * g_green + g_blue * g_blue);
+
+      image_data[i][j].red = (g_total > threshold) ? 0 : 255;
+      image_data[i][j].green = (g_total > threshold) ? 0 : 255;
+      image_data[i][j].blue = (g_total > threshold) ? 0 : 255;
     }
   }
 }
