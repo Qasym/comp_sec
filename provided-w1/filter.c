@@ -175,7 +175,7 @@ void filter_edge_detect(struct image *img, void *threshold_arg) {
   /* Iterate over all pixels */
   for (long i = 0; i < img->size_y; i++) {
     for (long j = 0; j < img->size_x; j++) {
-      /* TODO: Implement */
+      // todo: Implement */
     }
   }
 }
@@ -218,7 +218,7 @@ int __attribute__((weak)) main(int argc, char *argv[]) {
 
   /* If the filter takes an argument, copy it */
   if (argv[4]) {
-    strcpy(arg, argv[4]);
+    strncpy(arg, argv[4], ARG_SIZE); //! string vulnerability
   }
 
   /* Error when loading a png image */
