@@ -208,7 +208,54 @@ END_TEST
  * Then invert the result again and verify that you get a black image back
  * The alpha channel needs to be intact in both cases */
 START_TEST(negative_functionality) {
-  // todo: Implement */
+  srand(time(NULL) ^ getpid());
+
+  struct image img;
+  long limit;
+
+  // setting width and height
+  do {
+    img.size_x = rand() % 128;
+  } while (img.size_x == 0);
+  do {
+    img.size_y = rand() % 128;
+  } while (img.size_y == 0);
+
+  // allocating memory for pixels
+  limit = img.size_x * img.size_y;
+  img.px = malloc(limit * sizeof(struct pixel));
+  if (img.px == NULL)
+    assert(0 && "Rerun test, malloc failed");
+
+  // setting colors
+  for (int i = 0; i < limit; i++) { 
+    img.px[i].red = 0;
+    img.px[i].green = 0;
+    img.px[i].blue = 0;
+    img.px[i].alpha = 128;
+  }
+
+  // inverting
+  filter_negative(&img, NULL);
+
+  // checking the inverted image
+  for (int i = 0; i < limit; i++) {
+    ck_assert_uint_eq(img.px[i].red, 255);
+    ck_assert_uint_eq(img.px[i].green, 255);
+    ck_assert_uint_eq(img.px[i].blue, 255);
+    ck_assert_uint_eq(img.px[i].alpha, 128);
+  }
+
+  // invert back to original
+  filter_negative(&img, NULL);
+
+  // checking the inverted image
+  for (int i = 0; i < limit; i++) {
+    ck_assert_uint_eq(img.px[i].red, 0);
+    ck_assert_uint_eq(img.px[i].green, 0);
+    ck_assert_uint_eq(img.px[i].blue, 0);
+    ck_assert_uint_eq(img.px[i].alpha, 128);
+  }
 }
 END_TEST
 
