@@ -280,7 +280,79 @@ START_TEST(blur_functionality) {
       {black, black, black}, {black, white, black}, {black, black, black}};
   struct image img = {3, 3, &px};
 
-  // todo: Implement */
+  // --- --- --- BEGIN --- --- --- //
+
+  struct image copy;
+  int radius;
+  
+
+  // check for radius = 0
+  copy = duplicate_img(img);
+  radius = 0;
+  filter_blur(&copy, &radius);
+
+  for (int i = 0; i < 9; i++) {
+    ck_assert_uint_eq(copy.px[i].red, img.px[i].red);
+    ck_assert_uint_eq(copy.px[i].blue, img.px[i].blue);
+    ck_assert_uint_eq(copy.px[i].green, img.px[i].green);
+    ck_assert_uint_eq(copy.px[i].alpha, img.px[i].alpha);
+    ck_assert_uint_eq(copy.px[i].alpha, 255);
+  }
+
+  // check for radius = 1
+  copy = duplicate_img(img);
+  radius = 1;
+  filter_blur(&copy, &radius);
+
+  // generate correct output
+  struct pixel dark0 = {28, 28, 28, 255};
+  struct pixel dark1 = {42, 42, 42, 255};
+  struct pixel dark2 = {63, 63, 63, 255};
+  struct pixel px_r1[3][3] = {
+    {dark2, dark1, dark2}, {dark1, dark0, dark1}, {dark2, dark1, dark2}
+  };
+  struct image img_r1 = {3, 3, &px_r1};
+
+  for (int i = 0; i < 9; i++) {
+    ck_assert_uint_eq(copy.px[i].red, img_r1.px[i].red);
+    ck_assert_uint_eq(copy.px[i].blue, img_r1.px[i].blue);
+    ck_assert_uint_eq(copy.px[i].green, img_r1.px[i].green);
+    ck_assert_uint_eq(copy.px[i].alpha, img_r1.px[i].alpha);
+    ck_assert_uint_eq(copy.px[i].alpha, 255);
+  }
+
+  // check for radius = 2
+  copy = duplicate_img(img);
+  radius = 2;
+  filter_blur(&copy, &radius);
+  
+  // generate correct output 
+  struct pixel px_r2[3][3] = {
+    {dark0, dark0, dark0}, {dark0, dark0, dark0}, {dark0, dark0, dark0}
+  };
+  struct image img_r2 = {3, 3, &px_r2};
+
+  for (int i = 0; i < 9; i++) {
+    ck_assert_uint_eq(copy.px[i].red, img_r2.px[i].red);
+    ck_assert_uint_eq(copy.px[i].blue, img_r2.px[i].blue);
+    ck_assert_uint_eq(copy.px[i].green, img_r2.px[i].green);
+    ck_assert_uint_eq(copy.px[i].alpha, img_r2.px[i].alpha);
+    ck_assert_uint_eq(copy.px[i].alpha, 255);
+  }
+
+  // check for radius = 3
+  copy = duplicate_img(img);
+  radius = 3;
+  filter_blur(&copy, &radius);
+
+  for (int i = 0; i < 9; i++) {
+    ck_assert_uint_eq(copy.px[i].red, img_r2.px[i].red);
+    ck_assert_uint_eq(copy.px[i].blue, img_r2.px[i].blue);
+    ck_assert_uint_eq(copy.px[i].green, img_r2.px[i].green);
+    ck_assert_uint_eq(copy.px[i].alpha, img_r2.px[i].alpha);
+    ck_assert_uint_eq(copy.px[i].alpha, 255);
+  }
+
 }
 END_TEST
 
@@ -323,7 +395,10 @@ int main() {
   srand(time(NULL) ^ getpid());
   blur_radius_img = generate_rand_img();
   int tmp[20] = {
-  // todo: Fill in required radii */
+    INT_MIN, INT_MAX, 0, blur_radius_img.size_x, blur_radius_img.size_y,
+    INT_MIN / 2, INT_MAX / 2, 0 / 2, blur_radius_img.size_x / 2, blur_radius_img.size_y / 2,
+    INT_MIN + 1, INT_MAX + 1, 1, blur_radius_img.size_x + 1, blur_radius_img.size_y + 1,
+    INT_MIN - 1, INT_MAX - 1, -1, blur_radius_img.size_x - 1, blur_radius_img.size_y - 1
   };
   memcpy(blur_radii, tmp, sizeof(blur_radii));
   tcase_add_loop_test(tc1, blur_radius_edge_cases, 0,
