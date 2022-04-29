@@ -145,6 +145,14 @@ void filter_transparency(struct image *img, void *transparency) {
   }
 }
 
+double detection_helper_mult(uint8_t* pixels, double** weights) {
+  double result = 0;
+  for (size_t i = 0; i < 9; i++) {
+    result += pixels[i] * weights[0][i];
+  }
+  return result;
+}
+
 /* This filter is used to detect edges by computing the gradient for each
  * pixel and comparing it to the threshold argument. When the gradient exceeds
  * the threshold, the pixel is replaced by black, otherwise white.
@@ -172,10 +180,49 @@ void filter_edge_detect(struct image *img, void *threshold_arg) {
   double weights_x[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
   double weights_y[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
 
-  /* Iterate over all pixels */
+  double g_red_x, g_red_y, g_green_x, g_green_y, g_blue_x, g_blue_y;
+  double g_red, g_green, g_blue;
+  uint8_t pixels[9];
   for (long i = 0; i < img->size_y; i++) {
     for (long j = 0; j < img->size_x; j++) {
-      // todo: Implement */
+      pixels[0] = image_data[(i - 1) < 0 ? 0 : i - 1][(j - 1) < 0 ? 0 : j - 1].red;
+      pixels[1] = image_data[(i - 1) < 0 ? 0 : i - 1][j].red;
+      pixels[2] = image_data[(i - 1) < 0 ? 0 : i - 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].red;
+      pixels[3] = image_data[i][(j - 1) < 0 ? 0 : j - 1].red;
+      pixels[4] = image_data[i][j].red;
+      pixels[5] = image_data[i][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].red;
+      pixels[6] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][(j - 1) < 0 ? 0 : j - 1].red;
+      pixels[7] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][j].red;
+      pixels[8] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].red;
+
+      g_red_x = detection_helper_mult(pixels, weights_x);
+      g_red_y = detection_helper_mult(pixels, weights_y);
+
+      pixels[0] = image_data[(i - 1) < 0 ? 0 : i - 1][(j - 1) < 0 ? 0 : j - 1].green;
+      pixels[1] = image_data[(i - 1) < 0 ? 0 : i - 1][j].green;
+      pixels[2] = image_data[(i - 1) < 0 ? 0 : i - 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].green;
+      pixels[3] = image_data[i][(j - 1) < 0 ? 0 : j - 1].green;
+      pixels[4] = image_data[i][j].green;
+      pixels[5] = image_data[i][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].green;
+      pixels[6] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][(j - 1) < 0 ? 0 : j - 1].green;
+      pixels[7] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][j].green;
+      pixels[8] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].green;
+
+      g_green_x = detection_helper_mult(pixels, weights_x);
+      g_green_y = detection_helper_mult(pixels, weights_y);
+
+      pixels[0] = image_data[(i - 1) < 0 ? 0 : i - 1][(j - 1) < 0 ? 0 : j - 1].blue;
+      pixels[1] = image_data[(i - 1) < 0 ? 0 : i - 1][j].blue;
+      pixels[2] = image_data[(i - 1) < 0 ? 0 : i - 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].blue;
+      pixels[3] = image_data[i][(j - 1) < 0 ? 0 : j - 1].blue;
+      pixels[4] = image_data[i][j].blue;
+      pixels[5] = image_data[i][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].blue;
+      pixels[6] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][(j - 1) < 0 ? 0 : j - 1].blue;
+      pixels[7] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][j].blue;
+      pixels[8] = image_data[(i + 1) >= img->size_y ? img->size_y - 1 : i + 1][(j + 1) >= img->size_x ? img->size_x - 1 : j + 1].blue;
+
+      g_blue_x = detection_helper_mult(pixels, weights_x);
+      g_blue_y = detection_helper_mult(pixels, weights_y);      
     }
   }
 }
