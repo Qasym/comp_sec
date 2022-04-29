@@ -112,8 +112,8 @@ void filter_negative(struct image *img, void *noarg) {
       (struct pixel(*)[img->size_x])img->px;
 
   /* Iterate over all the pixels */
-  for (long i = 0; i <= img->size_y; i++) {
-    for (long j = 0; j <= img->size_x; j++) {
+  for (long i = 0; i < img->size_y; i++) {
+    for (long j = 0; j < img->size_x; j++) {
 
       struct pixel current = image_data[i][j];
       struct pixel *neg = get_pixel();
