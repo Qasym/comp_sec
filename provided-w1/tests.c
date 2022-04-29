@@ -368,7 +368,17 @@ END_TEST
 
 /* Verify for a random image that the transparency filter works properly */
 START_TEST(transparency_functionality) {
-  
+  srand(time(NULL) ^ getpid());
+
+  struct image img;
+  img = generate_rand_img();
+  uint8_t transparency = rand();
+
+  filter_transparency(&img, &transparency);
+
+  for (int i = 0; i < img.size_x * img.size_y; i++) {
+    ck_assert_uint_eq(img.px[i].alpha, transparency);
+  }
 }
 END_TEST
 
