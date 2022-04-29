@@ -362,13 +362,13 @@ END_TEST
 struct image blur_radius_img;
 int blur_radii[20];
 START_TEST(blur_radius_edge_cases) {
-  // todo: Implement */
+  filter_blur(&blur_radius_img, &blur_radii[_i]);
 }
 END_TEST
 
 /* Verify for a random image that the transparency filter works properly */
 START_TEST(transparency_functionality) {
-  // todo: Implement */
+  
 }
 END_TEST
 
