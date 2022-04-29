@@ -384,7 +384,9 @@ END_TEST
 
 /* Check if the function crashes when we pass nullptr as the argument */
 START_TEST(transparency_edge_case) {
-  // todo: Implement */
+  uint8_t transparency = 128;
+  struct image *img = NULL;
+  filter_transparency(img, &transparency);
 }
 END_TEST
 
