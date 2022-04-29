@@ -217,7 +217,10 @@ void filter_edge_detect(struct image *img, void *threshold_arg) {
   double weightsX[9] = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
   double weightsY[9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
   double g_red_x, g_red_y, g_green_x, g_green_y, g_blue_x, g_blue_y;
-  double g_red, g_green, g_blue, g_total;
+  double g_red, g_green, g_blue;
+
+  double g_total[img->size_y][img->size_x];
+
   long pixels[9];
 
   if (DEBUG) printf("<2>\n");
@@ -286,15 +289,17 @@ void filter_edge_detect(struct image *img, void *threshold_arg) {
 
       if (DEBUG) printf("<10>\n");
 
-      g_total = sqrt(g_red * g_red + g_green * g_green + g_blue * g_blue);
+      g_total[i][j] = sqrt(g_red * g_red + g_green * g_green + g_blue * g_blue);
 
       if (DEBUG) printf("<11>\n");
+    }
+  }
 
-      image_data[i][j].red = (g_total > threshold) ? 0 : 255;
-      image_data[i][j].green = (g_total > threshold) ? 0 : 255;
-      image_data[i][j].blue = (g_total > threshold) ? 0 : 255;
-
-      if (DEBUG) printf("<12>\n");
+  for (long i = 0; i < img->size_y; i++) {
+    for (long j = 0; j < img->size_x; j++) {
+      image_data[i][j].red = (g_total[i][j] > threshold) ? 0 : 255;
+      image_data[i][j].green = (g_total[i][j] > threshold) ? 0 : 255;
+      image_data[i][j].blue = (g_total[i][j] > threshold) ? 0 : 255;
     }
   }
 
