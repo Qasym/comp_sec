@@ -30,9 +30,9 @@ anything except the rectangle
 
 ## Proof of concept
 - Observed<br>
-    ![Observed](rect_bad.png)
+    ![Observed](../src/test_imgs/rect_bad.png)
 - Expected<br>
-    ![Expected](rect_good.png)
+    ![Expected](../src/rect_good.png)
 
 ## Suggested fix
 - Delete all affected lines

@@ -28,9 +28,9 @@ resulting program didn't give the desired output
 
 ## Proof of concept
 - Observed<br>
-    ![Observed](circle_wrong_op.png)
+    ![Observed](../src/test_imgs/circle_wrong_op.png)
 - Expected<br>
-    ![Expected](circle_right_op.png)
+    ![Expected](../src/test_imgs/circle_right_op.png)
 
 ## Suggested fix
 - Substitute the comparison operator `==` to the assigning operator `=`
