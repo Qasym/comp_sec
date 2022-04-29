@@ -182,41 +182,24 @@ char *grayscale_output[] = {"test_imgs/desert_gray.png",
                             "test_imgs/summer_gray.png"};
 START_TEST(grayscale_examples) {
   double weights[] = {0.2125, 0.7154, 0.0721};
-  struct image *img1, *img2;
-  struct image *out1, *out2;
-
+  struct image *img, *out;
   // load images
-  ck_assert_int_eq(load_png(grayscale_sources[0], &img1), 0);
-  ck_assert_int_eq(load_png(grayscale_sources[1], &img2), 0);
+  ck_assert_int_eq(load_png(grayscale_sources[_i], &img), 0);
   
   // apply grayscale filter
-  filter_grayscale(img1, weights);
-  filter_grayscale(img2, weights);
+  filter_grayscale(img, weights);
 
   // load correct images
-  ck_assert_int_eq(load_png(grayscale_output[0], &out1), 0);
-  ck_assert_int_eq(load_png(grayscale_output[1], &out2), 0);
+  ck_assert_int_eq(load_png(grayscale_output[_i], &out), 0);
 
-  // compare out1 and img1
-  ck_assert_uint_eq(img1->size_x, out1->size_x);
-  ck_assert_uint_eq(img1->size_y, out1->size_y);
-  long limit = img1->size_x * img1->size_y;
+  // compare out and img
+  ck_assert_uint_eq(img->size_y, out->size_y);
+  long limit = img->size_x * img->size_y;
   for (int i = 0; i < limit; i++) {
-    ck_assert_int_eq(img1->px[i].red, out1->px[i].red);
-    ck_assert_int_eq(img1->px[i].green, out1->px[i].green);
-    ck_assert_int_eq(img1->px[i].blue, out1->px[i].blue);
-    ck_assert_int_eq(img1->px[i].alpha, out1->px[i].alpha);
-  }
-
-  // compare img2 and out2
-  ck_assert_uint_eq(img2->size_x, out2->size_x);
-  ck_assert_uint_eq(img2->size_y, out2->size_y);
-  long limit = img2->size_x * img2->size_y;
-  for (int i = 0; i < limit; i++) {
-    ck_assert_int_eq(img2->px[i].red, out2->px[i].red);
-    ck_assert_int_eq(img2->px[i].green, out2->px[i].green);
-    ck_assert_int_eq(img2->px[i].blue, out2->px[i].blue);
-    ck_assert_int_eq(img2->px[i].alpha, out2->px[i].alpha);
+    ck_assert_int_eq(img->px[i].red, out->px[i].red);
+    ck_assert_int_eq(img->px[i].green, out->px[i].green);
+    ck_assert_int_eq(img->px[i].blue, out->px[i].blue);
+    ck_assert_int_eq(img->px[i].alpha, out->px[i].alpha);
   }
 }
 END_TEST
@@ -299,7 +282,10 @@ int main() {
 
   /* Tests for functionality */
   tcase_add_test(tc2, grayscale_functionality);
-  // todo: Add looped test case for grayscale_examples */
+  
+  tcase_add_loop_test(tc2, grayscale_examples, 0, 
+                      sizeof(grayscale_sources) / sizeof(grayscale_sources[0])); //? will it result in 2
+
   tcase_add_test(tc2, negative_functionality);
   tcase_add_test(tc2, blur_functionality);
   tcase_add_test(tc2, transparency_functionality);
