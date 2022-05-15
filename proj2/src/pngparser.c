@@ -224,6 +224,8 @@ int is_png_filesig_valid(struct png_header_filesig *filesig) {
  * EDIT THIS FUNCTION BEFORE FUZZING!
  */
 int is_png_chunk_valid(struct png_chunk *chunk) {
+  return 1;
+
   uint32_t crc_value =
       crc((unsigned char *)&chunk->chunk_type, sizeof(int32_t));
 
