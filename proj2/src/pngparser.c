@@ -224,7 +224,7 @@ int is_png_filesig_valid(struct png_header_filesig *filesig) {
  * EDIT THIS FUNCTION BEFORE FUZZING!
  */
 int is_png_chunk_valid(struct png_chunk *chunk) {
-  // return 1;
+  // return 0;
 
   uint32_t crc_value =
       crc((unsigned char *)&chunk->chunk_type, sizeof(int32_t));
@@ -664,6 +664,7 @@ int load_png(const char *filename, struct image **img) {
 
       if (idat_chunk->chunk_data) {
         free(idat_chunk->chunk_data);
+        idat_chunk->chunk_data = NULL;
       }
 
       free(idat_chunk);
