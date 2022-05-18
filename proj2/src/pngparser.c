@@ -444,8 +444,8 @@ error:
       free(img->px);
     free(img);
   }
-  if (plte_entries)
-    free(plte_entries);
+  // if (plte_entries)
+  //   free(plte_entries);
   return NULL;
 }
 
@@ -668,15 +668,6 @@ int load_png(const char *filename, struct image **img) {
         goto error;
       }
 
-      if (current_chunk) {
-        if (current_chunk->chunk_data) {
-          free(current_chunk->chunk_data);
-          current_chunk->chunk_data = NULL;
-        }
-        free(current_chunk);
-        current_chunk = NULL;
-      }
-
       continue;
     }
 
@@ -757,6 +748,11 @@ success:
     }
     free(ihdr_chunk);
   }
+  if (iend_chunk) {
+    if (iend_chunk->chunk_data)
+      free(iend_chunk->chunk_data);
+    free(iend_chunk);
+  }
 
   return 0;
 error:
@@ -787,6 +783,11 @@ error_noinput:
       ihdr_chunk->chunk_data = NULL;
     }
     free(ihdr_chunk);
+  }
+  if (iend_chunk) {
+    if (iend_chunk->chunk_data)
+      free(iend_chunk->chunk_data);
+    free(iend_chunk);
   }
 
   return 1;
