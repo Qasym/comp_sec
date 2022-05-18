@@ -224,7 +224,7 @@ int is_png_filesig_valid(struct png_header_filesig *filesig) {
  * EDIT THIS FUNCTION BEFORE FUZZING!
  */
 int is_png_chunk_valid(struct png_chunk *chunk) {
-  // return 0;
+  return 1;
 
   uint32_t crc_value =
       crc((unsigned char *)&chunk->chunk_type, sizeof(int32_t));
@@ -275,7 +275,7 @@ int read_png_chunk(FILE *file, struct png_chunk *chunk) {
 error:
   if (chunk->chunk_data) {
     free(chunk->chunk_data);
-    chunk->chunk_data = NULL;
+    // chunk->chunk_data = NULL; //* my fix
   }
   return 1;
 }
@@ -398,10 +398,6 @@ struct image *convert_color_palette_to_image(png_chunk_ihdr *ihdr_chunk,
   struct plte_entry *plte_entries = (struct plte_entry *)plte_chunk->chunk_data;
 
   struct image *img = malloc(sizeof(struct image)); //! error read (address points to zero page)
-  
-  if (img == NULL) {
-    return NULL;
-  }
   
   img->size_y = height;
   img->size_x = width;
@@ -664,7 +660,7 @@ int load_png(const char *filename, struct image **img) {
 
       if (idat_chunk->chunk_data) {
         free(idat_chunk->chunk_data);
-        idat_chunk->chunk_data = NULL;
+        // idat_chunk->chunk_data = NULL; //* my fix
       }
 
       free(idat_chunk);
