@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     const char *input_name = argv[1];
     
-    if (!load_png(input_name, &img)) {
+    if (load_png(input_name, &img)) {
         return 1;
     }
 
