@@ -399,40 +399,33 @@ struct image *convert_color_palette_to_image(png_chunk_ihdr *ihdr_chunk,
 
   struct image *img = malloc(sizeof(struct image)); //! error read (address points to zero page)
   
+  if (!img) {
+    goto error;
+  }
+
   img->size_y = height;
   img->size_x = width;
   img->px = malloc(sizeof(struct pixel) * img->size_x * img->size_y);
 
   if (!img->px) {
-    free(img);
-    img = NULL;
-    return img;
+    goto error;
   }
 
   if (img->size_x != width || img->size_y != height) {
-    free(img->px);
-    free(img);
-    img = NULL;
-    return img;
+    goto error;
   }
 
   for (uint32_t idy = 0; idy < height; idy++) {
     // Filter byte at the start of every scanline needs to be 0
     if (inflated_buf[idy * (1 + width)]) { //! error overflow
-      free(img->px);
-      free(img);
-      return NULL;
+      goto error;
     }
     for (uint32_t idx = 0; idx < width; idx++) {
       palette_idx = inflated_buf[idy * (1 + width) + idx + 1]; //! error overflow
 
       // MY FIX //
       if (palette_idx >= (sizeof(plte_entries) / sizeof(struct plte_entry)) || (idy * img->size_x + idx) >= (sizeof(img->px) / sizeof(struct pixel))) {
-        if (img->px)
-          free(img->px);
-        free(img);
-        free(plte_entries);
-        return NULL;
+        goto error;
       }
       ////////////
 
@@ -444,6 +437,16 @@ struct image *convert_color_palette_to_image(png_chunk_ihdr *ihdr_chunk,
   }
 
   return img;
+
+error:
+  if (img) {
+    if (img->px)
+      free(img->px);
+    free(img);
+  }
+  if (plte_entries)
+    free(plte_entries);
+  return NULL;
 }
 
 /* Combine image metadata and decompressed image data (RGBA) into an image */
@@ -474,7 +477,7 @@ struct image *convert_rgb_alpha_to_image(png_chunk_ihdr *ihdr_chunk,
 
   for (uint32_t idy = 0; idy < height; idy++) {
     // The filter byte at the start of every scanline needs to be 0
-    if ((idy * (1 + 4 * width)) >= (sizeof(inflated_buf) / sizeof(uint32_t)) || inflated_buf[idy * (1 + 4 * width)]) { //! error overflow
+    if ((idy * (1 + 4 * width)) >= (sizeof(inflated_buf) / sizeof(uint32_t)) || inflated_buf[idy * (1 + 4 * width)]) {
       goto error;
     }
 
@@ -665,6 +668,15 @@ int load_png(const char *filename, struct image **img) {
         goto error;
       }
 
+      if (current_chunk) {
+        if (current_chunk->chunk_data) {
+          free(current_chunk->chunk_data);
+          current_chunk->chunk_data = NULL;
+        }
+        free(current_chunk);
+        current_chunk = NULL;
+      }
+
       continue;
     }
 
@@ -710,7 +722,10 @@ int load_png(const char *filename, struct image **img) {
   // Process decompressed data
   *img = parse_png(ihdr_chunk, plte_chunk, inflated_buf, inflated_size);
 
-  if (!*img) {
+  if (inflated_buf)
+    free(inflated_buf);
+
+  if (*img) {
     goto error;
   }
 
@@ -727,11 +742,21 @@ success:
     free(current_chunk);
   }
 
-  if (plte_chunk)
+  if (plte_chunk) {
+    if (plte_chunk->chunk_data) {
+      free(plte_chunk->chunk_data);
+      plte_chunk->chunk_data = NULL;
+    }
     free(plte_chunk);
+  }
 
-  if (ihdr_chunk)
+  if (ihdr_chunk) {
+    if (ihdr_chunk->chunk_data) {
+      free(ihdr_chunk->chunk_data);
+      ihdr_chunk->chunk_data = NULL;
+    }
     free(ihdr_chunk);
+  }
 
   return 0;
 error:
@@ -748,11 +773,21 @@ error_noinput:
     free(current_chunk);
   }
 
-  if (plte_chunk)
+  if (plte_chunk) {
+    if (plte_chunk->chunk_data) {
+      free(plte_chunk->chunk_data);
+      plte_chunk->chunk_data = NULL;
+    }
     free(plte_chunk);
+  }
 
-  if (ihdr_chunk)
+  if (ihdr_chunk) {
+    if (ihdr_chunk->chunk_data) {
+      free(ihdr_chunk->chunk_data);
+      ihdr_chunk->chunk_data = NULL;
+    }
     free(ihdr_chunk);
+  }
 
   return 1;
 }
