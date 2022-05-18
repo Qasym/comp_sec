@@ -9,10 +9,10 @@ clean:
 .PHONY: all clean fix_all_bugs tests
 
 libpngparser: pngparser.h pngparser.c crc.c crc.h
-	$(CC) -fsanitize=address -c pngparser.c crc.c
+	$(CC) -fsanitize=address -g -c pngparser.c crc.c
 	ar rcs libpngparser.a pngparser.o crc.o
 
 
 size: libpngparser size.c
-	$(CC) -fsanitize=address -o size size.c libpngparser.a -lz
+	$(CC) -fsanitize=address -g -o size size.c libpngparser.a -lz
 

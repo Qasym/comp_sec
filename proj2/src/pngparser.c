@@ -275,7 +275,7 @@ int read_png_chunk(FILE *file, struct png_chunk *chunk) {
 error:
   if (chunk->chunk_data) {
     free(chunk->chunk_data);
-    // chunk->chunk_data = NULL; //* my fix
+    chunk->chunk_data = NULL; //* my fix
   }
   return 1;
 }
@@ -403,17 +403,41 @@ struct image *convert_color_palette_to_image(png_chunk_ihdr *ihdr_chunk,
   img->size_x = width;
   img->px = malloc(sizeof(struct pixel) * img->size_x * img->size_y);
 
+  if (!img->px) {
+    free(img);
+    img = NULL;
+    return img;
+  }
+
+  if (img->size_x != width || img->size_y != height) {
+    free(img->px);
+    free(img);
+    img = NULL;
+    return img;
+  }
+
   for (uint32_t idy = 0; idy < height; idy++) {
     // Filter byte at the start of every scanline needs to be 0
-    if (inflated_buf[idy * (1 + width)]) {
+    if (inflated_buf[idy * (1 + width)]) { //! error overflow
       free(img->px);
       free(img);
       return NULL;
     }
     for (uint32_t idx = 0; idx < width; idx++) {
       palette_idx = inflated_buf[idy * (1 + width) + idx + 1]; //! error overflow
+
+      // MY FIX //
+      if (palette_idx >= (sizeof(plte_entries) / sizeof(struct plte_entry)) || (idy * img->size_x + idx) >= (sizeof(img->px) / sizeof(struct pixel))) {
+        if (img->px)
+          free(img->px);
+        free(img);
+        free(plte_entries);
+        return NULL;
+      }
+      ////////////
+
       img->px[idy * img->size_x + idx].red = plte_entries[palette_idx].red; //! error overflow
-      img->px[idy * img->size_x + idx].green = plte_entries[palette_idx].green;
+      img->px[idy * img->size_x + idx].green = plte_entries[palette_idx].green; //! error overflow
       img->px[idy * img->size_x + idx].blue = plte_entries[palette_idx].blue;
       img->px[idy * img->size_x + idx].alpha = 0xff;
     }
@@ -444,18 +468,22 @@ struct image *convert_rgb_alpha_to_image(png_chunk_ihdr *ihdr_chunk,
   img->size_x = width;
   img->px = malloc(sizeof(struct pixel) * img->size_x * img->size_y);
 
-  if (!img->px) {
+  if (!img->px || img->size_y != height || img->size_x != width) {
     goto error;
   }
 
   for (uint32_t idy = 0; idy < height; idy++) {
     // The filter byte at the start of every scanline needs to be 0
-    if (inflated_buf[idy * (1 + 4 * width)]) { //! error overflow
+    if ((idy * (1 + 4 * width)) >= (sizeof(inflated_buf) / sizeof(uint32_t)) || inflated_buf[idy * (1 + 4 * width)]) { //! error overflow
       goto error;
     }
 
     for (uint32_t idx = 0; idx < width; idx++) {
       pixel_idx = idy * (1 + 4 * width) + 1 + 4 * idx;
+
+      if (pixel_idx >= (sizeof(inflated_buf) / sizeof(uint32_t)) || (idy * img->size_x + idx) >= (sizeof(img->px) / sizeof(struct pixel))) {
+        goto error;
+      }
 
       r_idx = pixel_idx;
       g_idx = pixel_idx + 1;
@@ -464,7 +492,7 @@ struct image *convert_rgb_alpha_to_image(png_chunk_ihdr *ihdr_chunk,
 
       img->px[idy * img->size_x + idx].red = inflated_buf[r_idx]; //! error overflow
       img->px[idy * img->size_x + idx].green = inflated_buf[g_idx]; //! error overflow
-      img->px[idy * img->size_x + idx].blue = inflated_buf[b_idx];
+      img->px[idy * img->size_x + idx].blue = inflated_buf[b_idx]; //! error overflow
       img->px[idy * img->size_x + idx].alpha = inflated_buf[a_idx]; //! error overflow
     }
   }
@@ -478,6 +506,7 @@ error:
     }
     free(img);
   }
+  return NULL;
 }
 
 /* Creates magic unicorns */
@@ -660,7 +689,7 @@ int load_png(const char *filename, struct image **img) {
 
       if (idat_chunk->chunk_data) {
         free(idat_chunk->chunk_data);
-        // idat_chunk->chunk_data = NULL; //* my fix
+        idat_chunk->chunk_data = NULL; //* my fix
       }
 
       free(idat_chunk);
