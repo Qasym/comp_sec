@@ -26,5 +26,6 @@ fuzzer_store_png_palette: libpngparser
 # Fuzzes store_png palette file interface (fixed palette).
 	$(CC) $(CFLAGS) -o fuzzer_store_png_palette fuzzer_store_png_palette.c libpngparser.a -lz
 
-# todo: fuzzer_store_png_name:
+fuzzer_store_png_name: libpngparser
 # Fuzzes the filename argument of store_png.
+	$(CC) $(CFLAGS) -o fuzzer_store_png_name fuzzer_store_png_name.c libpngparser.a -lz
