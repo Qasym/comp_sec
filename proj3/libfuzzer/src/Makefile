@@ -4,7 +4,7 @@ override CFLAGS += -g -w -O3 -fsanitize=fuzzer,address
 all: libpngparser fuzzer_load_png fuzzer_load_png_name
 
 clean:
-	rm -f libpngparser.a fuzzer_load_png *.o fuzzer_load_png_name fuzzer_store_png_rgba
+	rm -f libpngparser.a fuzzer_load_png *.o fuzzer_load_png_name fuzzer_store_png_rgba fuzzer_store_png_palette fuzzer_store_png_name
 
 .PHONY: all clean
 
@@ -22,8 +22,9 @@ fuzzer_store_png_rgba: libpngparser
 # Fuzzes store_png RGBA file interface (no palette).
 	$(CC) $(CFLAGS) -o fuzzer_store_png_rgba fuzzer_store_png_rgba.c libpngparser.a -lz
 
-# todo: fuzzer_store_png_palette:
+fuzzer_store_png_palette: libpngparser
 # Fuzzes store_png palette file interface (fixed palette).
+	$(CC) $(CFLAGS) -o fuzzer_store_png_palette fuzzer_store_png_palette.c libpngparser.a -lz
 
 # todo: fuzzer_store_png_name:
 # Fuzzes the filename argument of store_png.
